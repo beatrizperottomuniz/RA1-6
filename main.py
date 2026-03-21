@@ -8,3 +8,5 @@ if __name__ == "__main__":
 
     nome = sys.argv[1]
     linhas = lerArquivo(nome)
+    for linha in linhas:
+        print(linha)
