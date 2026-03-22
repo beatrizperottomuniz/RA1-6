@@ -20,15 +20,14 @@ class TokenType:
     EOF = "EOF"
     UNKNOWN = "UNKNOWN"
 
-# classe do token com tipo, valor, linha e coluna
+# classe do token com tipo,linha, coluna, id do simbolo na string pool
 class Token:
-    def __init__(self, token_type: TokenType, value: str, line: int, column: int):
+    def __init__(self, token_type: TokenType, line: int, column: int, symbol_id=None):
         self.type = token_type
-        self.value = value
         self.line = line
         self.column = column
+        self.symbol_id = symbol_id
 
     def __repr__(self):
-        return f"Token({self.type}, {self.value}, {self.line}, {self.column})"
+        return f"Token({self.type}, {self.symbol_id}, {self.line}, {self.column})"
 
-#token = Token(TokenType.KEYWORD_RES, "RES", 1, 1)
