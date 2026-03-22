@@ -1,10 +1,10 @@
 # Aluno 3 = ler arquivo, recebe uma string de arquivo e devolve as linhas para ParseExpressao
-def lerArquivo(nomeArquivo: str):
+def lerArquivo(path: str):
     try:
-        with open(nomeArquivo, encoding='utf-8') as f:
-            return [linha.rstrip('\n') for linha in f]
+        with open(path, encoding='utf-8') as f:
+            return [line.rstrip('\n') for line in f]
     except FileNotFoundError:
-        print(f"Arquivo não encontrado: {nomeArquivo}")
+        print(f"Arquivo não encontrado: {path}")
         return []
     except Exception as e:
         print(f"Erro ao ler o arquivo: {e}")
