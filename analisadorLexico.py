@@ -1,3 +1,7 @@
+'''
+Aluna : Beatriz Perotto Muniz
+Grupo : RA1-6
+'''
 from Token import Token, TokenType
 from stringPool import StringPool
 import globalVars

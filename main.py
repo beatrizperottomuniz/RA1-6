@@ -1,3 +1,7 @@
+'''
+Aluna : Beatriz Perotto Muniz
+Grupo : RA1-6
+'''
 import sys
 from leituraArquivo import lerArquivo
 from analisadorLexico import parseExpressao

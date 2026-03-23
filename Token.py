@@ -1,3 +1,7 @@
+'''
+Aluna : Beatriz Perotto Muniz
+Grupo : RA1-6
+'''
 class TokenType:
     # keyword
     KEYWORD_RES = "KEYWORD_RES"

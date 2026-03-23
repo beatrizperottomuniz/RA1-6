@@ -1,3 +1,7 @@
+'''
+Aluna : Beatriz Perotto Muniz
+Grupo : RA1-6
+'''
 import unittest
 import os
 from leituraArquivo import lerArquivo

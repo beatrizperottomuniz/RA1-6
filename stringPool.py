@@ -1,3 +1,7 @@
+'''
+Aluna : Beatriz Perotto Muniz
+Grupo : RA1-6
+'''
 # para ver se a string (variavel) ja esta na pool
 class StringPool:
     def __init__(self):
