@@ -18,7 +18,6 @@ if __name__ == "__main__":
     globalVars.total_lines_global = len(lines)
     for line in lines:
         print(line)
-        tokens = parseExpressao(line)
-        print(tokens)
-        tokens_list.append(tokens)
+        parseExpressao(line, tokens_list)
+        print(tokens_list)
         globalVars.line_count_global += 1

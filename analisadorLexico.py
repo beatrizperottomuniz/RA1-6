@@ -17,7 +17,7 @@ class Lexer:
         self.tokens = []
 
         self.start_col = 1
-        self.current_state = self.state_start
+        self.current_state = self.stateStart
         self.keywords = {"RES": TokenType.KEYWORD_RES}
         self.operators = "+-*/%^"
         self.symbols = {
@@ -69,7 +69,7 @@ class Lexer:
     # funcoes de estados ------------------------------------
 
     # estado inicial
-    def state_start(self):
+    def stateStart(self):
         char = self.peek()
 
         if char is None:
@@ -79,7 +79,7 @@ class Lexer:
 
         if char.isspace():
             self.advance()
-            return self.state_start
+            return self.stateStart
 
         self.start_col = self.col
 
@@ -87,114 +87,117 @@ class Lexer:
         if char.isalpha() and char.isupper():
             self.buffer.append(char)
             self.advance()
-            return self.state_id
+            return self.stateId
 
         # transicao estado de num_int
         if char.isdigit():
             self.buffer.append(char)
             self.advance()
-            return self.state_num_int
+            return self.stateNumInt
 
         # transicao estado de operadores
         if char in self.operators:
             self.buffer.append(char)
             self.advance()
-            return self.state_operator
+            return self.stateOperator
 
         # transicao estado de parenteses
         if char in "()":
             self.buffer.append(char)
             self.advance()
-            return self.state_paren
+            return self.stateParen
 
         self.buffer.append(char)
         self.advance()
         self.emit(TokenType.UNKNOWN)
-        return self.state_start
+        return self.stateStart
 
 
-    def state_operator(self):
+    def stateOperator(self):
         char = self.buffer[0]
         if char == '/' and self.peek() == '/':
             self.buffer.append(self.peek())
             self.advance()
             self.emit(TokenType.INT_DIV)
-            return self.state_start
+            return self.stateStart
 
         if char in self.symbols:
             self.emit(self.symbols[char])
         else:
             self.emit(TokenType.UNKNOWN)
             
-        return self.state_start
+        return self.stateStart
 
 
-    def state_paren(self):
+    def stateParen(self):
         char = self.buffer[0]
         if char == '(':
             self.emit(TokenType.LPAREN)
         elif char == ')':
             self.emit(TokenType.RPAREN)
             
-        return self.state_start
+        return self.stateStart
     
 
-    def state_id(self):
+    def stateId(self):
         char = self.peek()
         if char is not None and char.isalpha() and char.isupper():
             self.buffer.append(char)
             self.advance()
-            return self.state_id
+            return self.stateId
             
         self.emit(TokenType.ID)
-        return self.state_start
+        return self.stateStart
 
 
-    def state_num_int(self):
+    def stateNumInt(self):
         char = self.peek()
         if char is not None and char.isdigit():
             self.buffer.append(char)
             self.advance()
-            return self.state_num_int
+            return self.stateNumInt
             
         if char == '.':
             self.buffer.append(char)
             self.advance()
-            return self.state_num_float
+            return self.stateNumFloat
             
         self.emit(TokenType.NUM_INT)
-        return self.state_start
+        return self.stateStart
 
 
-    def state_num_float(self):
+    def stateNumFloat(self):
         char = self.peek()
         if char is not None and char.isdigit():
             self.buffer.append(char)
             self.advance()
-            return self.state_num_float
+            return self.stateNumFloat
             
         if char == '.':
             # estado de erro para + de um ponto
             self.buffer.append(char)
             self.advance()
-            return self.state_invalid_num
+            return self.stateInvalidNum
             
         self.emit(TokenType.NUM_FLOAT)
-        return self.state_start
+        return self.stateStart
 
 
     # estado de erro para consumir o resto do numero float errado -> ex : 1.2.34
-    def state_invalid_num(self):
+    def stateInvalidNum(self):
         char = self.peek()
         if char is not None and (char.isdigit() or char == '.'):
             self.buffer.append(char)
             self.advance()
-            return self.state_invalid_num
+            return self.stateInvalidNum
             
         self.emit(TokenType.UNKNOWN)
-        return self.state_start
+        return self.stateStart
 
 
-def parseExpressao(line: str):
-    lexer = Lexer(line, globalVars.string_pool_global, globalVars.line_count_global)
-    return lexer.tokenize()
+# _tokens_ vem por referencia
+def parseExpressao(linha: str, _tokens_ : list) -> None:
+    lexer = Lexer(linha, globalVars.string_pool_global, globalVars.line_count_global)
+    #return lexer.tokenize()
+    tokens = lexer.tokenize()
+    _tokens_.extend(tokens)
