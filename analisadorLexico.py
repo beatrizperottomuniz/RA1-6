@@ -1,6 +1,6 @@
 from Token import Token, TokenType
 from stringPool import StringPool
-from globalVars import string_pool_global,line_count_global
+import globalVars
 
 class Lexer:
     def __init__(self, src: str, string_pool: StringPool,line_count: int):
@@ -69,7 +69,8 @@ class Lexer:
         char = self.peek()
 
         if char is None:
-            self.tokens.append(Token(TokenType.EOF, self.line, self.col))
+            if self.line == globalVars.total_lines_global:
+                self.tokens.append(Token(TokenType.EOF, self.line, self.col))
             return None
 
         if char.isspace():
@@ -191,5 +192,5 @@ class Lexer:
 
 
 def parseExpressao(line: str):
-    lexer = Lexer(line, string_pool_global, line_count_global)
+    lexer = Lexer(line, globalVars.string_pool_global, globalVars.line_count_global)
     return lexer.tokenize()
