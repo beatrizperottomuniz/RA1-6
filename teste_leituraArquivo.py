@@ -31,18 +31,21 @@ class TestLeituraArquivo(unittest.TestCase):
 
     # arq lido corretamente e \n é removido
     def test_ler_arquivo_com_sucesso(self):
-        resultado = lerArquivo(self.arquivo_comum)
+        resultado = []
+        lerArquivo(self.arquivo_comum, resultado)
         esperado = ["a = 10", "b = 20", "c = a + b"]
         self.assertEqual(resultado, esperado)
 
     # arq inexistente
     def test_ler_arquivo_inexistente(self):
-        resultado = lerArquivo("arquivo_que_nao_existe.txt")
+        resultado = []
+        lerArquivo("arquivo_que_nao_existe.txt", resultado)
         self.assertEqual(resultado, [])
 
     # arq vazio
     def test_ler_arquivo_vazio(self):
-        resultado = lerArquivo(self.arquivo_vazio)
+        resultado = []
+        lerArquivo(self.arquivo_vazio, resultado)
         self.assertEqual(resultado, [])
 
 if __name__ == '__main__':
