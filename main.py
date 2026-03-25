@@ -4,8 +4,10 @@ Grupo : RA1-6
 '''
 import sys
 import json
+from Token import Token, TokenType
 from leituraArquivo import lerArquivo
 from analisadorLexico import parseExpressao
+from geradorAssembly import gerarAssembly, finalizarAssembly
 import globalVars
 
 def exportarTokens(lista_tokens, caminho_exportar="saida_tokens.txt"):
@@ -27,27 +29,47 @@ def exportarTokens(lista_tokens, caminho_exportar="saida_tokens.txt"):
     try:
         with open(caminho_exportar, 'w', encoding='utf-8') as file:
             json.dump(dados, file, indent=4, ensure_ascii=False)
-        print(f"\nTokens exportados para o arquivo: '{caminho_exportar}'")
+        print(f"Tokens exportados para o arquivo: '{caminho_exportar}'")
     except Exception as e:
-        print(f"\nFalha ao salvar o arquivo de tokens: {e}")
+        print(f"Falha ao salvar o arquivo de tokens: {e}")
 
 
 # ------------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Uso: python teste_lerArquivo.py <nome_do_arquivo>")
+        print("Uso: python teste_lerArquivo.py <nome_do_arquivo>.txt")
         sys.exit(1)
 
     caminho = sys.argv[1]
     linhas = []
     tokens_lista = []
+    linhas_assembly = []
+    erro_linha = False
 
     lerArquivo(caminho, linhas)
     globalVars.total_lines_global = len(linhas)
     for linha in linhas:
-        print(linha)
-        parseExpressao(linha, tokens_lista)
+        tokens_linha = []
+        #assembly_linha = []
+        parseExpressao(linha, tokens_linha)
+        tokens_lista.extend(tokens_linha) # lista para exportar
+
+        token_desconhecido_na_linha = [token for token in tokens_linha if token.type == TokenType.UNKNOWN]
+        if token_desconhecido_na_linha:
+            erro_linha = True
+
+        if not erro_linha :
+            gerarAssembly(tokens_linha, linhas_assembly)
+
         globalVars.line_count_global += 1
 
-    print(tokens_lista)
     exportarTokens(tokens_lista)
+
+    if erro_linha :
+        print ("\nERRO : O código fonte possui um erro, não será possível gerar código assembly")
+    else:
+        print("\nSUCESSO: Arquivo 'saida.s' gerado com sucesso!")
+    # else:
+    #     assembly_final = finalizarAssembly(linhas_assembly)
+    #     with open("saida.s", "w") as f:
+    #         f.write(assembly_final)
