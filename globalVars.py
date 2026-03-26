@@ -1,6 +1,6 @@
 '''
 Aluna : Beatriz Perotto Muniz
-Grupo : RA1-6
+Grupo : RA1 6
 '''
 from stringPool import StringPool
 
