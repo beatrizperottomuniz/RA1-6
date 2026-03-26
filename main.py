@@ -36,6 +36,19 @@ def exportarTokens(lista_tokens, caminho_exportar="saida_tokens.txt"):
     except Exception as e:
         print(f"Falha ao salvar o arquivo de tokens: {e}")
 
+''' não inserido no analisador léxico pois é de responsabilidade de outra etapa; inserido por requisição em seção 26.3 :
+"(...) Entradas inválidas (ex.: (3.14 2.0 &), números malformados como 3.14.5, 3,45 ou parênteses desbalanceados). (...)"
+'''
+def verificacaoParentesesDesbalanceados(linha: str) -> bool:
+    pilha = []
+    for char in linha:
+        if char == '(':
+            pilha.append(char)
+        elif char == ')':
+            if not pilha:
+                return False
+            pilha.pop()
+    return not pilha
 
 # ------------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
@@ -56,12 +69,15 @@ if __name__ == "__main__":
     globalVars.total_lines_global = len(linhas)
     for linha in linhas:
         tokens_linha = []
-        #assembly_linha = []
         parseExpressao(linha, tokens_linha)
         tokens_lista.extend(tokens_linha) # lista para exportar
 
         token_desconhecido_na_linha = [token for token in tokens_linha if token.type == TokenType.UNKNOWN]
         if token_desconhecido_na_linha:
+            erro_linha = True
+
+        if not verificacaoParentesesDesbalanceados(linha):
+            print(f"Erro na linha {globalVars.line_count_global}: parênteses desbalanceados\n")
             erro_linha = True
 
         if not erro_linha :
@@ -77,7 +93,3 @@ if __name__ == "__main__":
     else:
         exibirResultados(resultados)
         print("\nSUCESSO: Arquivo 'saida.s' gerado com sucesso!")
-    # else:
-    #     assembly_final = finalizarAssembly(linhas_assembly)
-    #     with open("saida.s", "w") as f:
-    #         f.write(assembly_final)

@@ -36,7 +36,7 @@ def resgatarLexema(token) -> str:
     return ""
 
 
-def gerarAssembly(tokens: list, codigoAssembly: list) -> None:
+def gerarAssembly(_tokens_: list, codigoAssembly: list) -> None:
     global contador_label
     asm = []
     
@@ -47,7 +47,7 @@ def gerarAssembly(tokens: list, codigoAssembly: list) -> None:
 
     asm.append(f"\n    @ --- linha {linha_atual} ---")
 
-    for token in tokens:
+    for token in _tokens_:
         if token.type == TokenType.EOF:
             tem_eof = True
             continue
