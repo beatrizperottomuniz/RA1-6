@@ -1,6 +1,6 @@
 '''
 Aluna : Beatriz Perotto Muniz
-Grupo : RA1-6
+Grupo : RA1 6
 '''
 import struct
 from Token import TokenType
@@ -12,19 +12,19 @@ resultados_linha = []  # lbl dos resultados de cada linha para RES
 contador_label = 0
 
 
-def novoLabel(prefixo="LBL"):
+def novoLabel(prefixo="LBL") -> str:
     global contador_label
     contador_label += 1
     return f"{prefixo}_{contador_label}"
 
-def doubleParaBits(valor):
+def doubleParaBits(valor) -> tuple:
     #string para duas palavras de 32 b (IEEE 754 64 b little-endian)
     packed = struct.pack('<d', float(valor))
     word_baixo = struct.unpack('<I', packed[0:4])[0]
     word_alto = struct.unpack('<I', packed[4:8])[0]
     return word_baixo, word_alto
 
-def resgatarLexema(token):
+def resgatarLexema(token) -> str:
     if token.type in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
         return str(token.symbol_id)
     operadores = {TokenType.PLUS: "+", TokenType.MINUS: "-", TokenType.MULT: "*", 
@@ -41,8 +41,8 @@ def gerarAssembly(tokens: list, codigoAssembly: list) -> None:
     asm = []
     
     linha_atual = len(resultados_linha) + 1
-    ultimo_foi_valor = False
-    ultimo_numero = "0"
+    ultimo_foi_val = False
+    ultimo_num = "0"
     tem_eof = False
 
     asm.append(f"\n    @ --- linha {linha_atual} ---")
@@ -69,12 +69,12 @@ def gerarAssembly(tokens: list, codigoAssembly: list) -> None:
             asm.append(f"    VLDR d0, [r0]")
             asm.append(f"    VSTMDB sp!, {{d0}}")
             
-            ultimo_foi_valor = True
-            ultimo_numero = lex
+            ultimo_foi_val = True
+            ultimo_num = lex
 
         elif token.type == TokenType.ID:
             variaveis.add(lex)
-            if ultimo_foi_valor:
+            if ultimo_foi_val:
                 # Store
                 asm.append(f"    VLDMIA sp!, {{d0}}")
                 asm.append(f"    LDR r1, ={lex}_MEM")
@@ -85,30 +85,30 @@ def gerarAssembly(tokens: list, codigoAssembly: list) -> None:
                 asm.append(f"    LDR r0, ={lex}_MEM")
                 asm.append(f"    VLDR d0, [r0]")
                 asm.append(f"    VSTMDB sp!, {{d0}}")
-            ultimo_foi_valor = True
+            ultimo_foi_val = True
 
         elif token.type == TokenType.KEYWORD_RES:
-            n = int(ultimo_numero)
+            #n = int(ultimo_num)
+            n = int(float(ultimo_num))
             asm.append(f"    ADD sp, sp, #8")
 
             idx = (linha_atual - 1) - n
 
             # n=0 ou indice invalido: retorna 0.0
             if n == 0 or idx < 0 or idx >= len(resultados_linha):
-                #asm.append(f"    @ ({n} RES) invalido -> retorna 0.0")
                 if "0.0" not in constantes:
                     constantes["0.0"] = novoLabel("CONST")
                 asm.append(f"    LDR r0, ={constantes['0.0']}")
                 asm.append(f"    VLDR d0, [r0]")
                 asm.append(f"    VSTMDB sp!, {{d0}}")
-                ultimo_foi_valor = True
+                ultimo_foi_val = True
                 continue
 
             lbl_res = resultados_linha[idx]
             asm.append(f"    LDR r0, ={lbl_res}")
             asm.append(f"    VLDR d0, [r0]")
             asm.append(f"    VSTMDB sp!, {{d0}}")
-            ultimo_foi_valor = True
+            ultimo_foi_val = True
 
         elif token.type in (TokenType.PLUS, TokenType.MINUS, TokenType.MULT, TokenType.DIV, 
                             TokenType.INT_DIV, TokenType.MOD, TokenType.POW):
@@ -159,12 +159,12 @@ def gerarAssembly(tokens: list, codigoAssembly: list) -> None:
                 asm.append(f"{lbl_fim}:")
 
             asm.append("    VSTMDB sp!, {d0}")
-            ultimo_foi_valor = True
+            ultimo_foi_val = True
 
     lbl_linha = f"RES_LINHA_{linha_atual}"
     resultados_linha.append(lbl_linha)
     
-    if ultimo_foi_valor:
+    if ultimo_foi_val:
         asm.append(f"    VLDMIA sp!, {{d0}}")
         asm.append(f"    LDR r3, ={lbl_linha}")
         asm.append(f"    VSTR d0, [r3]")

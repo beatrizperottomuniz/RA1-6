@@ -1,13 +1,16 @@
 '''
 Aluna : Beatriz Perotto Muniz
-Grupo : RA1-6
+Grupo : RA1 6
 '''
 import sys
 import json
 from Token import Token, TokenType
 from leituraArquivo import lerArquivo
 from analisadorLexico import parseExpressao
-from geradorAssembly import gerarAssembly, finalizarAssembly
+from geradorAssembly import gerarAssembly
+from executaExpressao import executarExpressao
+from exibeResultados import exibirResultados
+
 import globalVars
 
 def exportarTokens(lista_tokens, caminho_exportar="saida_tokens.txt"):
@@ -44,7 +47,10 @@ if __name__ == "__main__":
     linhas = []
     tokens_lista = []
     linhas_assembly = []
+    resultados = []
+    memoria = {}
     erro_linha = False
+    
 
     lerArquivo(caminho, linhas)
     globalVars.total_lines_global = len(linhas)
@@ -59,6 +65,7 @@ if __name__ == "__main__":
             erro_linha = True
 
         if not erro_linha :
+            executarExpressao(tokens_linha, resultados , memoria)
             gerarAssembly(tokens_linha, linhas_assembly)
 
         globalVars.line_count_global += 1
@@ -68,6 +75,7 @@ if __name__ == "__main__":
     if erro_linha :
         print ("\nERRO : O código fonte possui um erro, não será possível gerar código assembly")
     else:
+        exibirResultados(resultados)
         print("\nSUCESSO: Arquivo 'saida.s' gerado com sucesso!")
     # else:
     #     assembly_final = finalizarAssembly(linhas_assembly)
