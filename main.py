@@ -68,7 +68,7 @@ if __name__ == "__main__":
     lerArquivo(caminho, linhas)
     globalVars.total_linhas_global = len(linhas)
     for linha in linhas:
-        print(linha)
+        #print(linha)
         tokens_linha = []
         parseExpressao(linha, tokens_linha)
         tokens_lista.extend(tokens_linha) # lista para exportar
