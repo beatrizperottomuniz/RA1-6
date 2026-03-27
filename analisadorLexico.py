@@ -51,7 +51,7 @@ class Lexer:
             else:
                 symbol_id = self.string_pool.get_or_add(lex_str)
         elif token_type in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
-            symbol_id = float(lex_str) if token_type == TokenType.NUM_FLOAT else int(lex_str)
+            symbol_id = self.string_pool.get_or_add(lex_str)
             
         elif token_type == TokenType.UNKNOWN:
             str_erro = lex_str 
