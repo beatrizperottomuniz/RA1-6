@@ -26,7 +26,7 @@ class TokenType:
 
 # classe do token com tipo,linha, coluna, id do simbolo na string pool
 class Token:
-    def __init__(self, token_type: TokenType, line: int, column: int, symbol_id=None):
+    def __init__(self, token_type: str, line: int, column: int, symbol_id=None):
         self.type = token_type
         self.line = line
         self.column = column
