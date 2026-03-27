@@ -26,12 +26,12 @@ class TokenType:
 
 # classe do token com tipo,linha, coluna, id do simbolo na string pool
 class Token:
-    def __init__(self, token_type: str, line: int, column: int, symbol_id=None):
-        self.type = token_type
-        self.line = line
-        self.column = column
-        self.symbol_id = symbol_id
+    def __init__(self, token_tipo: str, linha: int, coluna: int, simbolo_id : int):
+        self.tipo = token_tipo
+        self.linha = linha
+        self.coluna = coluna
+        self.simbolo_id = simbolo_id
 
     def __repr__(self):
-        return f"Token({self.type}, {self.symbol_id}, {self.line}, {self.column})"
+        return f"Token({self.tipo}, {self.simbolo_id}, {self.linha}, {self.coluna})"
 
