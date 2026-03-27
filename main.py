@@ -4,7 +4,7 @@ Grupo : RA1 6
 '''
 import sys
 import json
-from Token import Token, TokenType
+from Token import TokenType
 from leituraArquivo import lerArquivo
 from analisadorLexico import parseExpressao
 from geradorAssembly import gerarAssembly
@@ -18,10 +18,10 @@ def exportarTokens(lista_tokens, caminho_exportar="saida_tokens.txt"):
     # token -> dicionario
     for token in lista_tokens:
         tokens_serializados.append({
-            "type": token.type,
-            "line": token.line,
-            "column": token.column,
-            "symbol_id": token.symbol_id
+            "tipo": token.tipo,
+            "linha": token.linha,
+            "coluna": token.coluna,
+            "simbolo_id": token.simbolo_id
         })
     # tokens + string pool
     dados = {
@@ -66,25 +66,26 @@ if __name__ == "__main__":
     
 
     lerArquivo(caminho, linhas)
-    globalVars.total_lines_global = len(linhas)
+    globalVars.total_linhas_global = len(linhas)
     for linha in linhas:
+        print(linha)
         tokens_linha = []
         parseExpressao(linha, tokens_linha)
         tokens_lista.extend(tokens_linha) # lista para exportar
 
-        token_desconhecido_na_linha = [token for token in tokens_linha if token.type == TokenType.UNKNOWN]
+        token_desconhecido_na_linha = [token for token in tokens_linha if token.tipo == TokenType.UNKNOWN]
         if token_desconhecido_na_linha:
             erro_linha = True
 
         if not verificacaoParentesesDesbalanceados(linha):
-            print(f"Erro na linha {globalVars.line_count_global}: parênteses desbalanceados\n")
+            print(f"Erro na linha {globalVars.contador_linha_global}: parênteses desbalanceados\n")
             erro_linha = True
 
         if not erro_linha :
             executarExpressao(tokens_linha, resultados , memoria)
             gerarAssembly(tokens_linha, linhas_assembly)
 
-        globalVars.line_count_global += 1
+        globalVars.contador_linha_global += 1
 
     exportarTokens(tokens_lista)
 

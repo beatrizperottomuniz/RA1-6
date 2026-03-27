@@ -9,18 +9,18 @@ class StringPool:
         self.strings = [] # lista de strings
 
     # retorna id se existe/ cria novo se não
-    def get_or_add(self, lexeme: str):
-        if lexeme in self.pool:
-            return self.pool[lexeme]
+    def buscarOuAdicionar(self, lexema: str):
+        if lexema in self.pool:
+            return self.pool[lexema]
 
-        next_id = len(self.strings) # id é o índice na lista
-        self.pool[lexeme] = next_id
-        self.strings.append(lexeme)
+        proximo_id = len(self.strings) # id é o índice na lista
+        self.pool[lexema] = proximo_id
+        self.strings.append(lexema)
 
-        return next_id
+        return proximo_id
 
     # retorna texto original de id
-    def get_string(self, symbol_id: int):
-        if 0 <= symbol_id < len(self.strings):
-            return self.strings[symbol_id]
-        return "unknown"
+    def obterString(self, simbolo_id: int):
+        if 0 <= simbolo_id < len(self.strings):
+            return self.strings[simbolo_id]
+        return "desconhecido"

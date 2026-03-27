@@ -27,10 +27,10 @@ def doubleParaBits(valor) -> tuple:
 def resgatarLexema(token) -> str:
     operadores = {TokenType.PLUS: "+", TokenType.MINUS: "-", TokenType.MULT: "*", 
                   TokenType.DIV: "/", TokenType.INT_DIV: "//", TokenType.MOD: "%", TokenType.POW: "^"}
-    if token.type in operadores:
-        return operadores[token.type]
-    if token.symbol_id is not None:
-        return string_pool_global.get_string(token.symbol_id)
+    if token.tipo in operadores:
+        return operadores[token.tipo]
+    if token.simbolo_id is not None:
+        return string_pool_global.obterString(token.simbolo_id)
     return ""
 
 
@@ -40,22 +40,23 @@ def gerarAssembly(_tokens_: list, codigoAssembly: list) -> None:
     
     linha_atual = len(resultados_linha) + 1
     ultimo_foi_val = False
+    ultimo_foi_literal = False
     ultimo_num = "0"
     tem_eof = False
 
     asm.append(f"\n    @ --- linha {linha_atual} ---")
 
     for token in _tokens_:
-        if token.type == TokenType.EOF:
+        if token.tipo == TokenType.EOF:
             tem_eof = True
             continue
 
-        if token.type in (TokenType.LPAREN, TokenType.RPAREN):
+        if token.tipo in (TokenType.LPAREN, TokenType.RPAREN):
             continue
 
         lex = resgatarLexema(token)
 
-        if token.type in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
+        if token.tipo in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
             lex = str(float(lex)) # para n duplicar (tipo 2.0 e 2)
             
             if lex not in constantes:
@@ -68,11 +69,12 @@ def gerarAssembly(_tokens_: list, codigoAssembly: list) -> None:
             asm.append(f"    VSTMDB sp!, {{d0}}")
             
             ultimo_foi_val = True
+            ultimo_foi_literal = True
             ultimo_num = lex
 
-        elif token.type == TokenType.ID:
+        elif token.tipo == TokenType.ID:
             variaveis.add(lex)
-            if ultimo_foi_val:
+            if ultimo_foi_literal:
                 # Store
                 asm.append(f"    VLDMIA sp!, {{d0}}")
                 asm.append(f"    LDR r1, ={lex}_MEM")
@@ -84,59 +86,62 @@ def gerarAssembly(_tokens_: list, codigoAssembly: list) -> None:
                 asm.append(f"    VLDR d0, [r0]")
                 asm.append(f"    VSTMDB sp!, {{d0}}")
             ultimo_foi_val = True
+            ultimo_foi_literal = False
 
-        elif token.type == TokenType.KEYWORD_RES:
+        elif token.tipo == TokenType.KEYWORD_RES:
             #n = int(ultimo_num)
             n = int(float(ultimo_num))
             asm.append(f"    ADD sp, sp, #8")
 
-            idx = (linha_atual - 1) - n
+            indice = (linha_atual - 1) - n
 
             # n=0 ou indice invalido: retorna 0.0
-            if n == 0 or idx < 0 or idx >= len(resultados_linha):
+            if n == 0 or indice < 0 or indice >= len(resultados_linha):
                 if "0.0" not in constantes:
                     constantes["0.0"] = novoLabel("CONST")
                 asm.append(f"    LDR r0, ={constantes['0.0']}")
                 asm.append(f"    VLDR d0, [r0]")
                 asm.append(f"    VSTMDB sp!, {{d0}}")
                 ultimo_foi_val = True
+                ultimo_foi_literal = False
                 continue
 
-            lbl_res = resultados_linha[idx]
+            lbl_res = resultados_linha[indice]
             asm.append(f"    LDR r0, ={lbl_res}")
             asm.append(f"    VLDR d0, [r0]")
             asm.append(f"    VSTMDB sp!, {{d0}}")
             ultimo_foi_val = True
+            ultimo_foi_literal = False
 
-        elif token.type in (TokenType.PLUS, TokenType.MINUS, TokenType.MULT, TokenType.DIV, 
+        elif token.tipo in (TokenType.PLUS, TokenType.MINUS, TokenType.MULT, TokenType.DIV, 
                             TokenType.INT_DIV, TokenType.MOD, TokenType.POW):
             
             # desempilhar operandos (d1 = direita, d0 = esquerda)
             asm.append(f"    VLDMIA sp!, {{d1}}")
             asm.append(f"    VLDMIA sp!, {{d0}}")
 
-            if token.type == TokenType.PLUS:
+            if token.tipo == TokenType.PLUS:
                 asm.append("    VADD.F64 d0, d0, d1")
-            elif token.type == TokenType.MINUS:
+            elif token.tipo == TokenType.MINUS:
                 asm.append("    VSUB.F64 d0, d0, d1")
-            elif token.type == TokenType.MULT:
+            elif token.tipo == TokenType.MULT:
                 asm.append("    VMUL.F64 d0, d0, d1")
-            elif token.type == TokenType.DIV:
+            elif token.tipo == TokenType.DIV:
                 asm.append("    VDIV.F64 d0, d0, d1")
                 
-            elif token.type == TokenType.INT_DIV:
+            elif token.tipo == TokenType.INT_DIV:
                 asm.append("    VDIV.F64 d2, d0, d1")
                 asm.append("    VCVT.S32.F64 s4, d2")
                 asm.append("    VCVT.F64.S32 d0, s4")
                 
-            elif token.type == TokenType.MOD:
+            elif token.tipo == TokenType.MOD:
                 asm.append("    VDIV.F64 d2, d0, d1")
                 asm.append("    VCVT.S32.F64 s4, d2")
                 asm.append("    VCVT.F64.S32 d2, s4")
                 asm.append("    VMUL.F64 d2, d2, d1")
                 asm.append("    VSUB.F64 d0, d0, d2")
                 
-            elif token.type == TokenType.POW:
+            elif token.tipo == TokenType.POW:
                 lbl_loop = novoLabel("POW_LOOP")
                 lbl_fim  = novoLabel("POW_FIM")
                 
@@ -158,6 +163,7 @@ def gerarAssembly(_tokens_: list, codigoAssembly: list) -> None:
 
             asm.append("    VSTMDB sp!, {d0}")
             ultimo_foi_val = True
+            ultimo_foi_literal = False
 
     lbl_linha = f"RES_LINHA_{linha_atual}"
     resultados_linha.append(lbl_linha)

@@ -7,33 +7,33 @@ from geradorAssembly import resgatarLexema
 
 def executarExpressao(tokens: list, resultados: list, memoria: dict) -> None:
     pilha = []
-    ultimo_foi_val = False
-    ultimo_num    = 0.0   # para pegar numero da linha de RES
+    ultimo_foi_literal = False
+    ultimo_num    = 0.0   # p/pegar numero da linha de RES
     for token in tokens:
 
-        if token.type in (TokenType.LPAREN, TokenType.RPAREN, TokenType.EOF):
+        if token.tipo in (TokenType.LPAREN, TokenType.RPAREN, TokenType.EOF):
             continue
 
-        if token.type in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
+        if token.tipo in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
             valor = resgatarLexema(token)
             pilha.append(float(valor))
-            ultimo_foi_val = True
+            ultimo_foi_literal = True
             ultimo_num    = valor
             continue
 
-        if token.type == TokenType.ID:
+        if token.tipo == TokenType.ID:
             nome_var = resgatarLexema(token)
-            if ultimo_foi_val: # caso (Valor VARIAVEL)
+            if ultimo_foi_literal: # caso (Valor VARIAVEL)
                 valor = pilha.pop()
                 memoria[nome_var] = valor
                 pilha.append(valor)
             else:
                 valor = memoria.get(nome_var, 0.0)
                 pilha.append(valor)
-            ultimo_foi_val = True
+            ultimo_foi_literal = False
             continue
 
-        if token.type == TokenType.KEYWORD_RES:
+        if token.tipo == TokenType.KEYWORD_RES:
             n = int(ultimo_num)
             pilha.pop()
             linha_atual = len(resultados)
@@ -42,36 +42,36 @@ def executarExpressao(tokens: list, resultados: list, memoria: dict) -> None:
                 pilha.append(resultados[i])
             else:
                 pilha.append(0.0)   # se a linha nao existe
-            ultimo_foi_val = True
+            ultimo_foi_literal = False
             continue
 
-        if token.type in (TokenType.PLUS, TokenType.MINUS, TokenType.MULT,
+        if token.tipo in (TokenType.PLUS, TokenType.MINUS, TokenType.MULT,
                           TokenType.DIV, TokenType.INT_DIV, TokenType.MOD,
                           TokenType.POW):
             num_direita = pilha.pop()
             num_esquerda  = pilha.pop()
 
-            if token.type == TokenType.PLUS:
+            if token.tipo == TokenType.PLUS:
                 pilha.append(num_esquerda + num_direita)
-            elif token.type == TokenType.MINUS:
+            elif token.tipo == TokenType.MINUS:
                 pilha.append(num_esquerda - num_direita)
-            elif token.type == TokenType.MULT:
+            elif token.tipo == TokenType.MULT:
                 pilha.append(num_esquerda * num_direita)
-            elif token.type == TokenType.DIV:
+            elif token.tipo == TokenType.DIV:
                 pilha.append(num_esquerda / num_direita)
-            elif token.type == TokenType.INT_DIV:
+            elif token.tipo == TokenType.INT_DIV:
                 pilha.append(float(int(num_esquerda / num_direita)))
-            elif token.type == TokenType.MOD:
+            elif token.tipo == TokenType.MOD:
                 quociente = float(int(num_esquerda / num_direita))
                 pilha.append(num_esquerda - quociente * num_direita)
-            elif token.type == TokenType.POW:
+            elif token.tipo == TokenType.POW:
                 acumulador = 1.0
                 expoente   = int(num_direita)
                 for _ in range(expoente):
                     acumulador = acumulador * num_esquerda
                 pilha.append(acumulador)
 
-            ultimo_foi_val = True
+            ultimo_foi_literal = False
             continue
 
     resultado_final = pilha[-1] if pilha else 0.0

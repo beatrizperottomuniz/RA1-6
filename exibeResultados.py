@@ -6,7 +6,7 @@ from decimal import Decimal, ROUND_HALF_EVEN
 import math
 import struct
 
-def float_para_hex(valor):
+def floatParaHex(valor):
     bytes_ = struct.pack('>d', valor) 
     return bytes_.hex()
 
@@ -14,7 +14,7 @@ def float_para_hex(valor):
 def exibirResultados(resultados: list) -> None:
     print("\n------ Resultados esperados ------")
     for i, valor in enumerate(resultados):
-        print(f"Linha {i + 1}: {formatar(valor)} e em hexa : {float_para_hex(valor)}")
+        print(f"Linha {i + 1} - em decimal : {formatar(valor)} ; e em hexadecimal : {floatParaHex(valor)}")
     print("-----------------------------------")
 
 # para IEEE754 -> roundTiesToEven
