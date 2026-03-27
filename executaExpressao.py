@@ -15,8 +15,8 @@ def executarExpressao(tokens: list, resultados: list, memoria: dict) -> None:
             continue
 
         if token.type in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
-            valor = float(token.symbol_id)
-            pilha.append(valor)
+            valor = resgatarLexema(token)
+            pilha.append(float(valor))
             ultimo_foi_val = True
             ultimo_num    = valor
             continue

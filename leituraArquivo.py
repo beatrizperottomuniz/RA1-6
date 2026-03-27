@@ -2,7 +2,6 @@
 Aluna : Beatriz Perotto Muniz
 Grupo : RA1 6
 '''
-# Aluno 3 = ler arquivo, recebe uma string de arquivo e devolve as linhas para ParseExpressao
 def lerArquivo(nomeArquivo: str, linhas: list) -> None:
     try:
         with open(nomeArquivo, encoding='utf-8') as arquivo:

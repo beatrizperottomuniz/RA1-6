@@ -25,8 +25,6 @@ def doubleParaBits(valor) -> tuple:
     return word_baixo, word_alto
 
 def resgatarLexema(token) -> str:
-    if token.type in (TokenType.NUM_INT, TokenType.NUM_FLOAT):
-        return str(token.symbol_id)
     operadores = {TokenType.PLUS: "+", TokenType.MINUS: "-", TokenType.MULT: "*", 
                   TokenType.DIV: "/", TokenType.INT_DIV: "//", TokenType.MOD: "%", TokenType.POW: "^"}
     if token.type in operadores:
