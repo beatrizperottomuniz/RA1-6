@@ -172,6 +172,8 @@ def gerarAssembly(_tokens_: list, codigoAssembly: list) -> None:
         asm.append(f"    VLDMIA sp!, {{d0}}")
         asm.append(f"    LDR r3, ={lbl_linha}")
         asm.append(f"    VSTR d0, [r3]")
+        asm.append(f"    LDR r0, ={lbl_linha}")
+        asm.append(f"    BL PRINT_RES_HEX")
 
     codigoAssembly.extend(asm)
     if tem_eof:
@@ -202,6 +204,59 @@ def finalizarAssembly(codigo: list) -> None:
     out.extend([
         "",
         "    .text",
+        """                                             
+  @ 1. UART_PUTCHAR  -  envia r0 (1 byte) pela UART                                          
+  UART_PUTCHAR:                                                                                     
+      PUSH {r1, r2, lr}                                                                             
+      LDR r2, =0xFF201000                                                                           
+  _UART_WAIT:                                                                                     
+      LDR r1, [r2, #4]        
+      LSR r1, r1, #16                                                 
+      CMP r1, #0                                                                                    
+      BEQ _UART_WAIT                                                           
+      STRB r0, [r2]                                                                 
+      POP {r1, r2, pc}                                                                              
+                                                                                                      
+  @ 2. PRINT_NIBBLES_32  -  imprime r7 como 8 dígitos hex
+  PRINT_NIBBLES_32:                                                                                 
+      PUSH {r6, r7, lr}                                                                             
+      MOV r6, #8                                                   
+  _LOOP_NIB:                                                                                        
+      MOV r0, r7, LSR #28     
+      AND r0, r0, #0xF                                                                              
+      CMP r0, #10                                                                                 
+      ADDLT r0, r0, #48       @ 0–9 :'0' = 48                                                    
+      ADDGE r0, r0, #55       @ A–F :'A'–10 = 55                                                 
+      BL UART_PUTCHAR
+      LSL r7, r7, #4                                                             
+      SUBS r6, r6, #1                                                                             
+      BNE _LOOP_NIB                                                                                 
+      POP {r6, r7, pc}                                                                            
+                                                                                                                                                                                                      
+  @ 3. PRINT_RES_HEX  -  imprime double de 64 bits em hex
+  @    r0 = endereço do valor                                                   
+  PRINT_RES_HEX:                                                                                    
+      PUSH {r4, r5, lr}                                                                             
+      LDR r4, [r0]            @ word baixo                             
+      LDR r5, [r0, #4]        @ word alto                                         
+                                                                                                    
+      MOV r0, #48             @ '0'                                                                 
+      BL UART_PUTCHAR                                                                               
+      MOV r0, #120            @ 'x'                                                               
+      BL UART_PUTCHAR
+                                                                                                    
+      MOV r7, r5              @ word alto primeiro 
+      BL PRINT_NIBBLES_32                                                                           
+      MOV r7, r4              @ word baixo                                               
+      BL PRINT_NIBBLES_32                                                                           
+  
+      MOV r0, #13             @ '\r'                                                                
+      BL UART_PUTCHAR                                                                             
+      MOV r0, #10             @ '\n'
+      BL UART_PUTCHAR                                                                               
+  
+      POP {r4, r5, pc}                                                                              
+                        """,
         "    .global _start",
         "_start:",
         "    MRC p15, 0, r1, c1, c0, 2",
