@@ -12,9 +12,9 @@ class TestLeituraArquivo(unittest.TestCase):
     def setUp(self):
         self.arquivo_comum = "teste_sucesso.txt"
         with open(self.arquivo_comum, 'w', encoding='utf-8') as f:
-            f.write("a = 10\n")
-            f.write("b = 20\n")
-            f.write("c = a + b")
+            f.write("(2 3 +)\n")
+            f.write("(1 3 -)\n")
+            f.write("(1 RES)")
             
         self.arquivo_vazio = "teste_vazio.txt"
         with open(self.arquivo_vazio, 'w', encoding='utf-8') as f:
@@ -33,7 +33,7 @@ class TestLeituraArquivo(unittest.TestCase):
     def test_ler_arquivo_com_sucesso(self):
         resultado = []
         lerArquivo(self.arquivo_comum, resultado)
-        esperado = ["a = 10", "b = 20", "c = a + b"]
+        esperado = ["(2 3 +)", "(1 3 -)", "(1 RES)"]
         self.assertEqual(resultado, esperado)
 
     # arq inexistente
