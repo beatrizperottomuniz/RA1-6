@@ -205,7 +205,7 @@ def finalizarAssembly(codigo: list) -> None:
         "",
         "    .text",
         """                                             
-  @ 1. UART_PUTCHAR  -  envia r0 (1 byte) pela UART                                          
+  @ UART_PUTCHAR - envia r0 (1 byte) por UART                                          
   UART_PUTCHAR:                                                                                     
       PUSH {r1, r2, lr}                                                                             
       LDR r2, =0xFF201000                                                                           
@@ -217,7 +217,7 @@ def finalizarAssembly(codigo: list) -> None:
       STRB r0, [r2]                                                                 
       POP {r1, r2, pc}                                                                              
                                                                                                       
-  @ 2. PRINT_NIBBLES_32  -  imprime r7 como 8 dígitos hex
+  @ PRINT_NIBBLES_32 - imprime r7 como 8 digitos hex
   PRINT_NIBBLES_32:                                                                                 
       PUSH {r6, r7, lr}                                                                             
       MOV r6, #8                                                   
@@ -233,8 +233,8 @@ def finalizarAssembly(codigo: list) -> None:
       BNE _LOOP_NIB                                                                                 
       POP {r6, r7, pc}                                                                            
                                                                                                                                                                                                       
-  @ 3. PRINT_RES_HEX  -  imprime double de 64 bits em hex
-  @    r0 = endereço do valor                                                   
+  @ PRINT_RES_HEX - imprime double de 64 bits em hex
+  @ r0 = endereco do valor                                                   
   PRINT_RES_HEX:                                                                                    
       PUSH {r4, r5, lr}                                                                             
       LDR r4, [r0]            @ word baixo                             
@@ -250,9 +250,9 @@ def finalizarAssembly(codigo: list) -> None:
       MOV r7, r4              @ word baixo                                               
       BL PRINT_NIBBLES_32                                                                           
   
-      MOV r0, #13             @ '\r'                                                                
+      MOV r0, #13             @ \ r                                                                
       BL UART_PUTCHAR                                                                             
-      MOV r0, #10             @ '\n'
+      MOV r0, #10             @ \ n 
       BL UART_PUTCHAR                                                                               
   
       POP {r4, r5, pc}                                                                              
