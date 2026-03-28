@@ -6,7 +6,7 @@
 **Aluna** : Beatriz Perotto Muniz [@beatrizperottomuniz](https://github.com/beatrizperottomuniz)<br>
 
 ### Descrição
-Este projeto implementa um analisador léxico para expressões aritméticas, capaz de identificar tokens e gerar código assembly correspondente.
+Este projeto implementa um analisador léxico capaz de identificar tokens e gerar código assembly correspondente.
 
 ### Requisitos 
 Python 3.x instalado <br>
