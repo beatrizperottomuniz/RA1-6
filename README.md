@@ -41,7 +41,7 @@ _Obs : também estão disponiveis os arquivos teste02.txt e teste03.txt_ <br>
 4. Clique em "Compile and Load", espere a interface exibir a mensagem de "Compile succeeded" em Messages. <br>
 5. OPCIONAL : Em "Settings" mude "Format" para "Decimal signed" se quiser ver as operações realizadas em tempo real.<br>
 6. OPCIONAL : Use "Step Over" para ver as instruções sendo executadas passo a passo (visualize em d0 os resultados das operações).<br>
-7. Clique em "Continue" e verifique na JTAG UART os resultados em hexadecimal (little endian). Verifique se os resultados estão corretos visualizando (no terminal em que o comando do passo 1 foi rodado) os valores esperados para as operações. <br>
+7. Clique em "Continue" e verifique na JTAG UART os resultados em hexadecimal. Verifique se os resultados estão corretos visualizando (no terminal em que o comando do passo 1 foi rodado) os valores esperados para as operações. <br>
 
 #### Rodando funções de testes
 ```
