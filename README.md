@@ -28,6 +28,9 @@ Onde:
 * `main.py` é o arquivo principal do projeto
 * `nome_do_seu_arquivo.txt` contém as expressões a serem analisadas. O arquivo deverá estar em formato txt, contendo apenas operações suportadas. Para criar seu próprio arquivo, utilize `teste01.txt` como exemplo.<br>
 
+_Observação:_
+Dependendo da configuração do sistema operacional, o comando `python` pode estar vinculado ao Python 3. Nesse caso, o comando `python3` pode ser substituído por `python`. <br>
+
 ### Como testar
 #### Rodando com programas de teste fornecidos
 1. Após clonar o diretório, rode o comando
