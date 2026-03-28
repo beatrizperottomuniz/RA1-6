@@ -1,5 +1,5 @@
 '''
-Aluna : Beatriz Perotto Muniz
+Aluna : Beatriz Perotto Muniz @beatrizperottomuniz
 Grupo : RA1 6
 '''
 import sys
@@ -53,7 +53,7 @@ def verificacaoParentesesDesbalanceados(linha: str) -> bool:
 # ------------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Uso: python teste_lerArquivo.py <nome_do_arquivo>.txt")
+        print("Uso: python3 main.py <nome_do_arquivo>.txt")
         sys.exit(1)
 
     caminho = sys.argv[1]

@@ -45,14 +45,17 @@ _Obs : também estão disponiveis os arquivos teste02.txt e teste03.txt_ <br>
 
 #### Rodando funções de testes
 ```
+python3 teste_analisadorLexico.py
+python3 teste_executaExpressao.py
+python3 teste_geradorAssembly.py
 python3 teste_leituraArquivo.py
-python3 main.py
-python3 main.py
-python3 main.py
-python3 main.py
+python3 teste_processoCompleto.py
 ```
+_Obs : acesse os arquivos para verificação de detalhes dos testes_ <br>
 
 ### Observações
 1. O nome do diretório não aparece como RA1 6 pois a plataforma não permite, adicionando um '-' <br>
 2. Foi requisitado que fosse testado com entradas com parênteses desbalanceados, este teste está incluído no arquivo de testes para processo completo, e não no de analisador léxico, pois a função responsável pela validação não está incluída neste módulo, já que essa verificação não faz parte do processo de análise léxica, que apenas gera os tokens.<br>
 3. A assinatura da função `gerarAssembly(const std::vector< std::string >& _tokens_, std::string& codigoAssembly)` foi alterada para referenciar um VETOR de string "codigoAssembly" , já que na linguagem usada strings são imutáveis. <br>
+4. A função executarExpressao está no main porque o enunciado exige (seção 26.7.4), e é usada para validar o Assembly gerado, como indicado na seção 26.7.2. O cálculo real ocorre no Assembly rodando no CPUlator.<br>
+5. Os arquivos de saída em assembly e de tokens mostrados no repositório são correspondentes ao `teste03.txt`.<br>

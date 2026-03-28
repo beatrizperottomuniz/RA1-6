@@ -1,5 +1,5 @@
 '''
-Aluna : Beatriz Perotto Muniz
+Aluna : Beatriz Perotto Muniz @beatrizperottomuniz
 Grupo : RA1 6
 '''
 def lerArquivo(nomeArquivo: str, linhas: list) -> None:
