@@ -1,5 +1,5 @@
 '''
-Aluna : Beatriz Perotto Muniz
+Aluna : Beatriz Perotto Muniz @beatrizperottomuniz
 Grupo : RA1 6
 '''
 from decimal import Decimal, ROUND_HALF_EVEN

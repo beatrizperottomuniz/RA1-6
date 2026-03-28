@@ -1,5 +1,5 @@
 '''
-Aluna : Beatriz Perotto Muniz
+Aluna : Beatriz Perotto Muniz @beatrizperottomuniz
 Grupo : RA1 6
 '''
 import struct
@@ -250,9 +250,9 @@ def finalizarAssembly(codigo: list) -> None:
       MOV r7, r4              @ word baixo                                               
       BL PRINT_NIBBLES_32                                                                           
   
-      MOV r0, #13             @ \ r                                                                
+      MOV r0, #13             @ r                                                                
       BL UART_PUTCHAR                                                                             
-      MOV r0, #10             @ \ n 
+      MOV r0, #10             @ n 
       BL UART_PUTCHAR                                                                               
   
       POP {r4, r5, pc}                                                                              
